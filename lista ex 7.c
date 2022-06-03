@@ -1,23 +1,21 @@
-int main(){
+#include <stdio.h>
 
-    int x, y, i;
+int main()
+{
 
+    double x, i, fat;
 
-    scanf("%i %i", &x, &y);
+    scanf("%lf", &x);
 
-    for (i=x; i<=y; i=i+2){
+    fat = x;
 
-        if (i % 2 != 0){
-
-            i = i + 1;
-
-        }
-
-        printf(" %i", i);
-
-
+    for (i = 1; i < x; i= i + 1)
+    {
+        fat = fat * i;
     }
+    printf("\nfatorial= %lf", fat);
 
-
- return 0;
+    return 0;
 }
+
+
