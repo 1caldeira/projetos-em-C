@@ -4,7 +4,7 @@ int main(){
 
 printf("ola mundo\n");
 
-for(int i=1; i<20; i++){
+for(int i=1; i<=20; i++){
 
         printf("%d\n", i);
 
