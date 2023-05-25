@@ -94,7 +94,7 @@ No* removerJogador(No* raiz, char* nome)
 {
     if (raiz == NULL)
     {
-        printf("Jogador nao encontrado.\n");
+        printf("\nJogador nao encontrado.\n");
         return raiz;
     }
 
@@ -114,12 +114,14 @@ No* removerJogador(No* raiz, char* nome)
         {
             No* temp = raiz->direita;
             free(raiz);
+            printf("Jogador removido com sucesso.\n");
             return temp;
         }
         else if (raiz->direita == NULL)
         {
             No* temp = raiz->esquerda;
             free(raiz);
+            printf("Jogador removido com sucesso.\n");
             return temp;
         }
 
@@ -139,12 +141,12 @@ int main()
 
     while (menu != 5)
     {
-        printf("Bem-vindo ao programa de registrar dinossauros! Escolha uma opcao para continuar:\n");
+        printf("\nEscolha uma opcao para continuar:\n");
         printf("Digite 1 para registrar um novo jogador\n");
         printf("Digite 2 para buscar um jogador\n");
         printf("Digite 3 para remover um jogador\n");
         printf("Digite 4 para listar jogadores\n");
-        printf("Digite 5 para sair\n");
+        printf("Digite 5 para sair\n\n");
         scanf("%d", &menu);
 
         switch (menu)
@@ -182,7 +184,7 @@ int main()
                 }
                 else
                 {
-                    printf("Jogador nao encontrado.\n");
+                    printf("\nJogador nao encontrado.\n");
                 }
                 break;
             }
@@ -192,7 +194,6 @@ int main()
                 char nomeRemocao[50];
                 scanf("%s", nomeRemocao);
                 raiz = removerJogador(raiz, nomeRemocao);
-                printf("Jogador removido com sucesso.\n");
                 break;
             }
         case 4:
