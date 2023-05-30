@@ -20,6 +20,7 @@ typedef struct no
 
 No* inserirJogador(No* raiz, Jogador jogador)
 {
+    //se a raiz estiver vazia, aloca memoria para armazenar uma nova estrutura no e define os nos esquerda e direita como nulos (vazios)
     if (raiz == NULL)
     {
         No* novoNo = (No*)malloc(sizeof(No));
@@ -28,9 +29,9 @@ No* inserirJogador(No* raiz, Jogador jogador)
         novoNo->direita = NULL;
         return novoNo;
     }
-
+    //compara o nome que foi passado como parametro para inserir com o nome da raiz atual para saber onde inserir o jogador
     int comp = strcmp(jogador.nome, raiz->jogador.nome);
-
+    //se o nome passado por parametro for menor, chama a funcao recursivamente passando o no esquerdo como parametro, se for maior, chama passando o no direito como parametro
     if (comp < 0)
     {
         raiz->esquerda = inserirJogador(raiz->esquerda, jogador);
@@ -49,11 +50,12 @@ No* inserirJogador(No* raiz, Jogador jogador)
 
 No* buscarJogador(No* raiz, char* nome)
 {
+    //se a raiz estiver vazia ou se encontrou o jogador, retorna raiz
     if (raiz == NULL || strcmp(nome, raiz->jogador.nome) == 0)
     {
         return raiz;
     }
-
+    //chama recursivamente a funcao dependendo do resultado do strcmp
     if (strcmp(nome, raiz->jogador.nome) < 0)
     {
         return buscarJogador(raiz->esquerda, nome);
@@ -66,20 +68,18 @@ No* buscarJogador(No* raiz, char* nome)
 
 void listarJogadores(No* raiz)
 {
+    //lista todos os jogadores, do menor para o maior (leitura feita na ordem esquerda, meio, direita)
     if (raiz != NULL)
     {
         listarJogadores(raiz->esquerda);
-        printf("Nome: %s\n", raiz->jogador.nome);
-        printf("Posicao: %s\n", raiz->jogador.posicao);
-        printf("Idade: %d\n", raiz->jogador.idade);
-        printf("Habilidade: %d\n", raiz->jogador.habilidade);
-        printf("Numero da camisa: %d\n\n", raiz->jogador.camisa);
+        printf("| %-10s | %-10s | %-5d | %-10d | %-6d |\n", raiz->jogador.nome, raiz->jogador.posicao, raiz->jogador.idade, raiz->jogador.habilidade, raiz->jogador.camisa);
         listarJogadores(raiz->direita);
     }
 }
 
 No* encontrarMenorValor(No* raiz)
 {
+    //encontra o menor valor lexicografico no nó da direita para substituir o no q esta sendo removido sem prejudicar a ordenacao da arvore encadeada
     No* atual = raiz;
 
     while (atual && atual->esquerda != NULL)
@@ -94,7 +94,7 @@ No* removerJogador(No* raiz, char* nome)
 {
     if (raiz == NULL)
     {
-        printf("\nJogador nao encontrado.\n");
+        printf("\nJogador nao cadastrado.\n");
         return raiz;
     }
 
@@ -110,21 +110,28 @@ No* removerJogador(No* raiz, char* nome)
     }
     else
     {
+        //apos encontrar o no que sera removido, verifica se o nó a sua esquerda armazena algo
         if (raiz->esquerda == NULL)
         {
+            //caso nao, armazena o que tinha na direita em um no temporario, desaloca a memoria do nó que sera removido
+            //e retorna o nó da direita como atual raiz
             No* temp = raiz->direita;
             free(raiz);
             printf("Jogador removido com sucesso.\n");
             return temp;
         }
+        //se o nó da esquerda nao estiver vazio, verifica se o da direita está, caso esteja, a memoria do nó que sera
+        //removido será desalocada e retorna o nó da esquerda como atual raiz
         else if (raiz->direita == NULL)
         {
+
             No* temp = raiz->esquerda;
             free(raiz);
             printf("Jogador removido com sucesso.\n");
             return temp;
         }
-
+        //caso o nó que sera removido tenha filhos na esquerda e na direita, ele encontra o menor valor entre os filhos da direita para substituir o nó que sera removido e
+        //chama a funcao recursivamente para remover o nó duplicado na direita
         No* temp = encontrarMenorValor(raiz->direita);
         raiz->jogador = temp->jogador;
         raiz->direita = removerJogador(raiz->direita, temp->jogador.nome);
@@ -154,7 +161,7 @@ int main()
         case 1:
             {
                 Jogador jogador;
-                printf("Escreva o nome do jogador: ");
+                printf("\nEscreva o nome do jogador: ");
                 scanf("%s", jogador.nome);
                 printf("Escreva a posicao do jogador: ");
                 scanf("%s", jogador.posicao);
@@ -169,22 +176,20 @@ int main()
             }
         case 2:
             {
-                printf("Escreva o nome do jogador que deseja buscar: ");
+                printf("\nEscreva o nome do jogador que deseja buscar: ");
                 char nomeBusca[50];
                 scanf("%s", nomeBusca);
                 No* jogadorEncontrado = buscarJogador(raiz, nomeBusca);
                 if (jogadorEncontrado != NULL)
                 {
-                    printf("Jogador encontrado:\n");
-                    printf("Nome: %s\n", jogadorEncontrado->jogador.nome);
-                    printf("Posicao: %s\n", jogadorEncontrado->jogador.posicao);
-                    printf("Idade: %d\n", jogadorEncontrado->jogador.idade);
-                    printf("Habilidade: %d\n", jogadorEncontrado->jogador.habilidade);
-                    printf("Numero da camisa: %d\n\n", jogadorEncontrado->jogador.camisa);
+                    printf("O Jogador esta cadastrado\nSegue abaixo suas informacoes:\n");
+                    printf("\n| %-10s | %-10s | %-5s | %-10s | %-6s |\n", "Nome", "Posicao", "Idade", "Habilidade", "Camisa");
+                    printf("|------------|------------|-------|------------|--------|\n");
+                    printf("| %-10s | %-10s | %-5d | %-10d | %-6d |\n", jogadorEncontrado->jogador.nome, jogadorEncontrado->jogador.posicao, jogadorEncontrado->jogador.idade, jogadorEncontrado->jogador.habilidade, jogadorEncontrado->jogador.camisa);
                 }
                 else
                 {
-                    printf("\nJogador nao encontrado.\n");
+                    printf("\nJogador nao cadastrado.\n");
                 }
                 break;
             }
@@ -198,7 +203,8 @@ int main()
             }
         case 4:
             {
-                printf("Lista de jogadores:\n");
+                printf("\nLista de jogadores:\n");
+                printf("\n| %-10s | %-10s | %-5s | %-10s | %-6s |\n", "Nome", "Posicao", "Idade", "Habilidade", "Camisa");
                 listarJogadores(raiz);
                 break;
             }
